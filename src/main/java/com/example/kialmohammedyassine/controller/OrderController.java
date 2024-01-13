@@ -1,13 +1,15 @@
 package com.example.kialmohammedyassine.controller;
 
 
+import com.example.kialmohammedyassine.entity.Cash;
 import com.example.kialmohammedyassine.entity.Customer;
 import com.example.kialmohammedyassine.entity.Order;
 import com.example.kialmohammedyassine.entity.OrderDetail;
+import com.example.kialmohammedyassine.service.CashService;
 import com.example.kialmohammedyassine.service.OrderDetailService;
 import com.example.kialmohammedyassine.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,11 +20,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderDetailService orderDetailService;
+    private final CashService cashService;
 
     @Autowired
-    public OrderController(OrderService orderService, OrderDetailService orderDetailService) {
+    public OrderController(OrderService orderService, OrderDetailService orderDetailService, CashService cashService) {
         this.orderService = orderService;
         this.orderDetailService = orderDetailService;
+        this.cashService = cashService;
     }
 
 
@@ -68,6 +72,14 @@ public class OrderController {
         order.addOrderDetail(orderDetail);
         this.orderDetailService.updateOrderDetail(orderDetail.getId(),orderDetail);
 
+    }
+
+    @PostMapping("/assignCashToOrder/{id}/{cashId}")
+    public void assignPaymentToOrder(@PathVariable Long id, @PathVariable Long cashId) {
+        Order order = this.orderService.getOrderById(id);
+        Cash cash = this.cashService.getCashById(cashId);
+        order.addPayment(cash);
+        this.cashService.updateCash(cash.getId(),cash);
     }
 
 
