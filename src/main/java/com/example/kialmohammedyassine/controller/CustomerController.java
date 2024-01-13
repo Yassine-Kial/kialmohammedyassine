@@ -2,7 +2,9 @@ package com.example.kialmohammedyassine.controller;
 
 
 import com.example.kialmohammedyassine.entity.Customer;
+import com.example.kialmohammedyassine.entity.Order;
 import com.example.kialmohammedyassine.service.CustomerService;
+import com.example.kialmohammedyassine.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +14,12 @@ import java.util.List;
 @RequestMapping("/customer")
 public class CustomerController {
     private final CustomerService customerService;
+    private final OrderService orderService;
 
     @Autowired
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, OrderService orderService) {
         this.customerService = customerService;
+        this.orderService = orderService;
     }
 
 
@@ -44,6 +48,16 @@ public class CustomerController {
     @PutMapping("/update/{id}")
     public void updateCustomer(@PathVariable Long id, @RequestBody Customer customer) {
         this.customerService.updateCustomer(id,customer);
+    }
+
+
+    @PostMapping("/assignOrderToCustomer/{id}/{orderId}")
+    public void assignOrderToCustomer(@PathVariable Long id, @PathVariable Long orderId) {
+        Customer customer  = this.customerService.getCustomerById(id);
+        Order order = this.orderService.getOrderById(orderId);
+        customer.addOrder(order);
+        this.orderService.updateOrder(order.getId(),order);
+
     }
 
 

@@ -60,7 +60,7 @@ public class OrderController {
 
     @PutMapping("/update/{id}")
     public void updateOrder(@PathVariable Long id, @RequestBody Order order) {
-        this.orderService.updateCustomer(id,order);
+        this.orderService.updateOrder(id,order);
     }
 
 

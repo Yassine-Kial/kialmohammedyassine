@@ -37,7 +37,7 @@ public class OrderService {
         this.orderRepository.deleteById(id);
     }
 
-    public void updateCustomer(Long id, Order order) {
+    public void updateOrder(Long id, Order order) {
 
         this.orderRepository.findById(id).map(o-> {
                     o.setId(id);
