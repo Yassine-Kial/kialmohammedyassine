@@ -3,8 +3,11 @@ package com.example.kialmohammedyassine.controller;
 
 import com.example.kialmohammedyassine.entity.Customer;
 import com.example.kialmohammedyassine.entity.Order;
+import com.example.kialmohammedyassine.entity.OrderDetail;
+import com.example.kialmohammedyassine.service.OrderDetailService;
 import com.example.kialmohammedyassine.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,10 +17,12 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderDetailService orderDetailService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderDetailService orderDetailService) {
         this.orderService = orderService;
+        this.orderDetailService = orderDetailService;
     }
 
 
@@ -52,6 +57,17 @@ public class OrderController {
     @PutMapping("/update/{id}")
     public void updateOrder(@PathVariable Long id, @RequestBody Order order) {
         this.orderService.updateCustomer(id,order);
+    }
+
+
+
+    @PostMapping("/assignOrderDetailToOrder/{id}/{orderDetailId}")
+    public void assignOrderDetailToOrder(@PathVariable Long id, @PathVariable Long orderDetailId) {
+        Order order = this.orderService.getOrderById(id);
+        OrderDetail orderDetail = this.orderDetailService.getOrderDetailById(orderDetailId);
+        order.addOrderDetail(orderDetail);
+        this.orderDetailService.updateOrderDetail(orderDetail.getId(),orderDetail);
+
     }
 
 
