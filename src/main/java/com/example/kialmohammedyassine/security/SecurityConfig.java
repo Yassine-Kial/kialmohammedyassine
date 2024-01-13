@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth-> {
                     auth.requestMatchers("/customer/add").authenticated();
                     auth.requestMatchers("/customer/delete/*").hasRole("ADMIN");
+                    auth.anyRequest().authenticated();
                 })
 
 
